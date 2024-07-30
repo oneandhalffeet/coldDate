@@ -1,6 +1,19 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const app = express();
 const port = 4545;
+
+app.use(express.json());
+
+mongoose.connect('mongodb+srv://system:system@cluster0.xpwsaco.mongodb.net/Node-API?retryWrites=true&w=majority&appName=Cluster0')
+.then(() => {
+    app.listen(port, ()=>{
+        console.log("Listening to Port Now");
+    });
+    console.log('connected');
+}).catch((error) =>{
+    console.log(error);
+});
 
 app.get('/', (req, res) => {
     console.log("hit");
@@ -12,6 +25,3 @@ app.get('/index', (req, res) => {
     res.send("Hello Index!");
 });
 
-app.listen(port, ()=>{
-    console.log("haha");
-})
