@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+const bcrypt = require("bcryptjs");
 const { Schema } = mongoose;
 
 const userSchema = new Schema({
@@ -19,7 +20,16 @@ const userSchema = new Schema({
     password: {
         type: String,
         required: [true, 'Please Enter a password']
+    },
+    createdAt: {
+        type: Date,
+        default: new Date(),
     }
+});
+
+// before saving we are encrypting the password
+userSchema.pre("save", async function () {
+    this.password = await bcrypt.hash(this.password, 12);
 });
 
 const User = mongoose.model('User', userSchema);
