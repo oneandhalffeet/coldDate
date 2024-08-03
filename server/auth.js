@@ -37,7 +37,7 @@ router.post('/register', async (req, res) => {
         });
 
         // Send the token back to the client
-        res.status(201).json({ token });
+        res.status(201).json({ message: "User Successfully registered, Login", user: newUser });
     }catch(error){
         console.error('Error creating User:', error);
         res.status(500).json({ message: 'Error creating user' });

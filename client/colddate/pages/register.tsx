@@ -19,7 +19,7 @@ export default function LoginPage() {
     })
  
     if (response.ok) {
-      router.push('/profile')
+      router.push('/login')
     } else {
       // Handle errors
     }
