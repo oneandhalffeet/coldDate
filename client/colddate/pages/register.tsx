@@ -12,7 +12,7 @@ export default function LoginPage() {
     const password = formData.get('password')
     const name = formData.get('name')
  
-    const response = await fetch('http://localhost:4545/register', {
+    const response = await fetch('http://localhost:4545/api/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password, name })

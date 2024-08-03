@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+
 const app = express();
 const port = 4545;
 
@@ -21,24 +22,7 @@ app.get('/', (req, res) => {
     res.json({message: "This is front page"});
 });
 
-app.get('/login', (req, res) => {
-    console.log(`Logged in for get: ${req}`);
-    res.send("Login");
-});
-
-app.post('/login', (req, res) => {
-    console.log(`Logged in for mail: ${req.body.email}`);
-    res.send("Login");
-});
-
-app.post('/register', (req, res) => {
-    console.log(`Register for post: ${req.body.name}`);
-    res.send("Register");
-});
-
-app.get('/register', (req, res) => {
-    res.send("Register");
-});
+app.use('/api/auth', require('../server/auth'));
 
 app.get('/index', (req, res) => {
     console.log("index");
