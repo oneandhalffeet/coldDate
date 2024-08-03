@@ -7,40 +7,62 @@ const User = require('../server/models/userModel');
 
 
 router.get('/login', (req, res) => {
-    console.log(`Logged in for get: ${req}`);
     res.send("Login");
 });
 
-router.post('/login', (req, res) => {
-    console.log(`Logged in for mail: ${req.body.email}`);
-    res.send("Login");
+router.post('/login', async (req, res) => {
+    const { email, password } = req.body;
+    const hashedPassword = await bcrypt.hash(password, 10);
+    // find user with given email
+    const user = await User.findOne({ email: email });
+    if (user != undefined) {
+        bcrypt.compare(password, user.password, (err, isMatch) => {
+            if (err) {
+                // Handle the error (e.g., return an error response)
+                return res.status(500).json({ message: 'Internal server error' });
+            }
+
+            if (isMatch) {
+                // Passwords match! Proceed with further logic (e.g., generate JWT)
+                // Send JWT token or perform any other action
+                // Generate a JWT token
+                const token = jwt.sign({ userId: user._id }, 'your-secret-key', {
+                    expiresIn: '1d', // Token expiration time (adjust as needed)
+                });
+                res.status(200).json({ token });
+            } else {
+                // Incorrect password
+                return res.status(401).json({ message: 'Incorrect password' });
+            }
+
+        });
+    } else {
+        return res.status(500).json({ message: "User not found!" });
+    }
 });
 
 router.post('/register', async (req, res) => {
-    try{
-    console.log(`Register for Name: ${req.body.name}`);
-    const {name, email, password} = req.body;
-        // Encrypting password 
-        const hashedPassword = await bcrypt.hash(password, 10);
+    try {
+        const { name, email, password } = req.body;
+        // Check if User already exist
+        const user = User.find({email: email});
+        if(user){
+            return res.status(500).json({message: 'User already exist, Login!'});
+        }
 
         const newUser = new User({
             name: name,
             email: email,
-            password: hashedPassword
+            password: password
         })
 
         await newUser.save();
 
-        // Generate a JWT token
-        const token = jwt.sign({ userId: newUser._id }, 'your-secret-key', {
-        expiresIn: '1d', // Token expiration time (adjust as needed)
-        });
 
         // Send the token back to the client
-        res.status(201).json({ message: "User Successfully registered, Login", user: newUser });
-    }catch(error){
-        console.error('Error creating User:', error);
-        res.status(500).json({ message: 'Error creating user' });
+        return res.status(201).json({ message: "User Successfully registered, Login" });
+    } catch (error) {
+        return res.status(500).json({ message: 'Error creating user' });
     }
 });
 

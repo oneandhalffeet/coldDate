@@ -16,8 +16,8 @@ function index() {
   }, [])
   return (
     <div>
-      <Link href={'/login'}>Login</Link>\n
-      <Link href={'/register'}>Register</Link>\n
+      <Link href={'/login'}>Login</Link>
+      <Link href={'/register'}>Register</Link>
       {message}
     </div>
   )

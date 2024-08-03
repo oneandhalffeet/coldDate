@@ -15,7 +15,8 @@ const userSchema = new Schema({
                 return /(\w|\d)+@(\w|\d)+\.(\w|\d)+/.test(v);
             },
             message: props => `${props.value} is not a valid Email !`
-        }
+        },
+        unique: true
     },
     password: {
         type: String,
@@ -29,7 +30,7 @@ const userSchema = new Schema({
 
 // before saving we are encrypting the password
 userSchema.pre("save", async function () {
-    this.password = await bcrypt.hash(this.password, 12);
+    this.password = await bcrypt.hash(this.password, 10);
 });
 
 const User = mongoose.model('User', userSchema);
