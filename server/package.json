@@ -15,5 +15,8 @@
     "express": "^4.19.2",
     "mongodb": "4.0",
     "mongoose": "^8.5.1"
-  }
+  },
+  "workspaces": [
+    "packages/a"
+  ]
 }
