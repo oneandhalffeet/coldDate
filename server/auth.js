@@ -18,15 +18,15 @@ router.post('/login', async (req, res) => {
     if (user != undefined) {
         bcrypt.compare(password, user.password, (err, isMatch) => {
             if (err) {
-                // Handle the error (e.g., return an error response)
                 return res.status(500).json({ message: 'Internal server error' });
             }
 
             if (isMatch) {
-                // Passwords match! Proceed with further logic (e.g., generate JWT)
+                console.log(`match found ${email}===${password}`);
+                // Passwords match! Proceed with further logic
                 // Send JWT token or perform any other action
                 // Generate a JWT token
-                const token = jwt.sign({ userId: user._id }, 'your-secret-key', {
+                const token = jwt.sign({ name: user.name, email: user.email }, 'your-secret-key', {
                     expiresIn: '1d', // Token expiration time (adjust as needed)
                 });
                 res.status(200).json({ token });
@@ -46,7 +46,8 @@ router.post('/register', async (req, res) => {
         const { name, email, password } = req.body;
         // Check if User already exist
         const user = User.find({email: email});
-        if(user){
+        console.log(`email=${email}===${user._id}`);
+        if(user==undefined){
             return res.status(500).json({message: 'User already exist, Login!'});
         }
 
@@ -57,7 +58,6 @@ router.post('/register', async (req, res) => {
         })
 
         await newUser.save();
-
 
         // Send the token back to the client
         return res.status(201).json({ message: "User Successfully registered, Login" });
